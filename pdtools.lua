@@ -620,8 +620,8 @@ function ftext(text)
 end
 
 function update()
-	local fpath = os.getenv('TEMP') .. '\\ftulsupd.json'
-	downloadUrlToFile('https://raw.githubusercontent.com/WhackerH/kirya/master/ftulsupd.json', fpath, function(id, status, p1, p2)
+	local fpath = os.getenv('TEMP') .. '\\pdtools.json'
+	downloadUrlToFile('https://raw.githubusercontent.com/junior196/pdtools/master/pdtools.json', fpath, function(id, status, p1, p2)
   if status == dlstatus.STATUS_ENDDOWNLOADDATA then
     local f = io.open(fpath, 'r')
     if f then
@@ -631,9 +631,7 @@ function update()
       ttt = updlist1
 	    if info and info.latest then
 	    	if tonumber(thisScript().version) < tonumber(info.latest) then
-	        ftext('Обнаружено обновление {9966cc}'..script.this.name..'{ffffff}. Для обновления нажмите кнопку в окошке.')
-	        ftext('Примечание: Если у вас не появилось окошко введите {9966cc}/pdtools')
-	        updwindows.v = true
+        	ftext('Обнаружено обновление!')
 	        canupdate = true
 	    	else
 	        print('Обновлений скрипта не обнаружено. Приятной игры.')
