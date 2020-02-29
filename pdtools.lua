@@ -16,6 +16,7 @@ u8 = encoding.UTF8
 
 local autoBP = 1
 local checkstat = false
+local canupdate = false
 local suz = {}
 local tCarsName = {"Landstalker", "Bravura", "Buffalo", "Linerunner", "Perrenial", "Sentinel", "Dumper", "Firetruck", "Trashmaster", "Stretch", "Manana", "Infernus",
 "Voodoo", "Pony", "Mule", "Cheetah", "Ambulance", "Leviathan", "Moonbeam", "Esperanto", "Taxi", "Washington", "Bobcat", "Whoopee", "BFInjection", "Hunter",
@@ -122,6 +123,7 @@ local ykwindow = imgui.ImBool(false)
 local kshwindow = imgui.ImBool(false)
 local fpwindow = imgui.ImBool(false)
 local fastmenu = imgui.ImBool(false)
+local updatewindow = imgui.ImBool(false)
 function imgui.OnDrawFrame()
 	if main_window_state.v then
 		imgui.ShowCursor = true
@@ -132,6 +134,7 @@ function imgui.OnDrawFrame()
 		if imgui.Selectable(u8'Отыгровки', show == 2) then show = 2 end
 		if imgui.Selectable(u8'Авто-БП', show == 3) then show = 3 end
 		if imgui.Selectable(u8'Команды', show == 4) then show = 4 end
+		if canupdate then if imgui.Selectable(u8'Обновление', show == 5) then  updatewindow.v = true end end
 		imgui.EndChild()
 		imgui.SameLine()
 		imgui.BeginChild('##set1', imgui.ImVec2(475, 400), true)
@@ -157,16 +160,6 @@ function imgui.OnDrawFrame()
 				if meg.v then
 					imgui.SameLine(150)
 					imgui.Text(u8'Используйте клавишу \"B\"')
-				end
-				if canupdate then
-					imgui.PushItemWidth(305)
-					if imgui.Button(u8("Обновить"), imgui.ImVec2(100, 25)) then
-						lua_thread.create(goupdate)
-					end
-					imgui.SameLine()
-					if imgui.Button(u8("Отложить обновление"), imgui.ImVec2(150, 25)) then
-						ftext("Если вы захотите установить обновление введите команду {9966CC}/pdtools")
-					end
 				end
 			end
 			if show == 2 then
@@ -380,6 +373,22 @@ function imgui.OnDrawFrame()
 		end
 		imgui.End()
 	end
+	if updatewindow.v then
+		imgui.ShowCursor = true
+		local btn_size = imgui.ImVec2(-0.1, 0)
+		imgui.SetNextWindowSize(imgui.ImVec2(300, 110), imgui.Cond.FirstUseEver)
+		imgui.Begin(u8'PD Tools | Обновление', updatewindow, imgui.WindowFlags.NoResize  + imgui.WindowFlags.NoCollapse)
+		if imgui.Button(u8("Обновить"), btn_size) then
+			lua_thread.create(goupdate)
+			imgui.ShowCursor = false
+		end
+		if imgui.Button(u8("Отложить обновление"), btn_size) then
+			ftext("Если вы захотите установить обновление введите команду {de7171}/pdtools")
+			updatewindow.v = false
+			imgui.ShowCursor = false
+		end
+		imgui.End()
+	end
 end
 
 function main()
@@ -425,7 +434,7 @@ function main()
 		update()
 	while true do
 		wait(0)
-		imgui.Process = main_window_state.v or main_window_stats.v or imegaf.v or akwindow.v or ykwindow.v or kshwindow.v or fpwindow.v or fastmenu.v
+		imgui.Process = main_window_state.v or main_window_stats.v or imegaf.v or akwindow.v or ykwindow.v or kshwindow.v or fpwindow.v or fastmenu.v or updatewindow.v
 		if sampIsDialogActive() == false and not isPauseMenuActive() and isPlayerPlaying(playerHandle) and sampIsChatInputActive() == false then
 			if wasKeyPressed(82) then
 				if doklad.v then
@@ -633,6 +642,7 @@ function update()
 	    	if tonumber(thisScript().version) < tonumber(info.latest) then
         	ftext('Обнаружено обновление!')
 	        canupdate = true
+					updatewindow.v = true
 	    	else
 	        print('Обновлений скрипта не обнаружено. Приятной игры.')
 	        update = false
