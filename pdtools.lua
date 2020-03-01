@@ -1,6 +1,6 @@
 script_name("PD Tools")
 script_authors("junior")
-script_version("0.1")
+script_version("0.2")
 
 local limgui, imgui = pcall(require, 'imgui')
 local lrkeys, rkeys = pcall(require, 'rkeys')
