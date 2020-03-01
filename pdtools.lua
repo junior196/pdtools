@@ -1,6 +1,6 @@
 script_name("PD Tools")
 script_authors("junior")
-script_version("0.1")
+script_version("0.2")
 
 local limgui, imgui = pcall(require, 'imgui')
 local lrkeys, rkeys = pcall(require, 'rkeys')
@@ -201,10 +201,16 @@ function imgui.OnDrawFrame()
 				if imgui.Checkbox(u8"Спец оружие", specgun) then mainIni.config.specgun = specgun.v inicfg.save(mainIni, 'pdtools.ini') end
 			end
 			if show == 4 then
+				imgui.Text(u8'/fkv - Поставить метку на квадрат')
+				imgui.Text(u8'/su - Выдать звёзды через диалог')
 				imgui.Text(u8'/ak - Административный Кодекс')
 				imgui.Text(u8'/yk - Уголовный Кодекс')
 				imgui.Text(u8'/fp - Федеральное постановление')
 				imgui.Text(u8'/ksh - Конституция штата')
+				imgui.Separator()
+				imgui.Text(u8'Клавиша \"F2\" - Быстрое меню')
+				imgui.Text(u8'Клавиша \"R\" - Доклад')
+				imgui.Text(u8'Клавиша \"B\" - Мегафон')
 			end
 			imgui.EndChild()
 		imgui.End()
@@ -1200,18 +1206,16 @@ function hook.onShowDialog(id, style, title, button1, button2, text)
 		if armour.v or specgun.v or deagle.v or shot.v or smg.v or M4A1.v or rifle.v then
 			local guns = getCompl()
 			lua_thread.create(function()
-				wait(250)
+				wait(125)
 				if autoBP == #guns + 1 then
 					autoBP = 1
 					sampCloseCurrentDialogWithButton(0)
 					return
 				end
 				sampSetCurrentDialogListItem(guns[autoBP])
-				wait(250)
+				wait(125)
 				sampCloseCurrentDialogWithButton(1)
-				if button1 then
-					autoBP = autoBP + 1
-				end
+				if button1 then autoBP = autoBP + 1 end
 				return
 			end)
 		end
