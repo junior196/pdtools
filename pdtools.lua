@@ -2,9 +2,8 @@ script_name("PD Tools")
 script_authors("junior")
 script_version("0.1")
 
-local imgui = require 'imgui'
-local limadd, imadd = pcall(require, 'imgui_addons')
-local lrkeys, rkeys  = pcall(require, 'rkeys')
+local limgui, imgui = pcall(require, 'imgui')
+local lrkeys, rkeys = pcall(require, 'rkeys')
 local encoding = require 'encoding'
 local inicfg = require 'inicfg'
 local hook = require 'lib.samp.events'
@@ -280,7 +279,9 @@ function imgui.OnDrawFrame()
 			end
 			imgui.End()
 		else
-			ftext('Файл \"ak.txt\" в папке \"moonloader/pdtools\" не найден!')
+			local file = io.open("moonloader/pdtools/ak.txt", "w")
+      file:write("Шпора АК")
+      file:close()
 			akwindow.v = false
 			imgui.ShowCursor = false
 		end
@@ -297,7 +298,9 @@ function imgui.OnDrawFrame()
 			end
 			imgui.End()
 		else
-			ftext('Файл \"yk.txt\" в папке \"moonloader/pdtools\" не найден!')
+      local file = io.open("moonloader/pdtools/yk.txt", "w")
+      file:write("Шпора УК")
+      file:close()
 			ykwindow.v = false
 			imgui.ShowCursor = false
 		end
@@ -314,7 +317,9 @@ function imgui.OnDrawFrame()
 			end
 			imgui.End()
 		else
-			ftext('Файл \"ksh.txt\" в папке \"moonloader/pdtools\" не найден!')
+			local file = io.open("moonloader/pdtools/ksh.txt", "w")
+      file:write("Шпора КШ")
+      file:close()
 			kshwindow.v = false
 			imgui.ShowCursor = false
 		end
@@ -331,7 +336,9 @@ function imgui.OnDrawFrame()
 			end
 			imgui.End()
 		else
-			ftext('Файл \"fp.txt\" в папке \"moonloader/pdtools\" не найден!')
+			local file = io.open("moonloader/pdtools/fp.txt", "w")
+      file:write("Шпора ФП")
+      file:close()
 			fpwindow.v = false
 			imgui.ShowCursor = false
 		end
@@ -431,6 +438,7 @@ function main()
 			 main_window_state.v = not main_window_state.v
 			 imgui.ShowCursor = main_window_state.v
 		end)
+		libs()
 		update()
 	while true do
 		wait(0)
@@ -656,6 +664,79 @@ function update()
       update = false
     end
   end)
+end
+
+function libs()
+    if not limgui or not lrkeys  then
+      ftext('Начата загрузка недостающих библиотек')
+      ftext('По окончанию загрузки скрипт будет перезагружен')
+      if limgui == false then
+        imgui_download_status = 'proccess'
+        downloadUrlToFile('https://raw.githubusercontent.com/junior196/pdtools/master/lib/imgui.lua', 'moonloader/lib/imgui.lua', function(id, status, p1, p2)
+          if status == dlstatus.STATUS_DOWNLOADINGDATA then
+            imgui_download_status = 'proccess'
+            print(string.format('Загружено %d килобайт из %d килобайт.', p1, p2))
+          elseif status == dlstatus.STATUS_ENDDOWNLOADDATA then
+            imgui_download_status = 'succ'
+          elseif status == 64 then
+            imgui_download_status = 'failed'
+          end
+        end)
+        while imgui_download_status == 'proccess' do wait(0) end
+        if imgui_download_status == 'failed' then
+          print('Не удалось загрузить: imgui.lua')
+          thisScript():unload()
+        else
+          print('Файл: imgui.lua успешно загружен')
+          if doesFileExist('moonloader/lib/MoonImGui.dll') then
+            print('Imgui был загружен')
+          else
+            imgui_download_status = 'proccess'
+            downloadUrlToFile('https://raw.githubusercontent.com/junior196/pdtools/master/lib/MoonImGui.dll', 'moonloader/lib/MoonImGui.dll', function(id, status, p1, p2)
+              if status == dlstatus.STATUS_DOWNLOADINGDATA then
+                imgui_download_status = 'proccess'
+                print(string.format('Загружено %d килобайт из %d килобайт.', p1, p2))
+              elseif status == dlstatus.STATUS_ENDDOWNLOADDATA then
+                imgui_download_status = 'succ'
+              elseif status == 64 then
+                imgui_download_status = 'failed'
+              end
+            end)
+            while imgui_download_status == 'proccess' do wait(0) end
+            if imgui_download_status == 'failed' then
+              print('Не удалось загрузить Imgui')
+              thisScript():unload()
+            else
+              print('Imgui был загружен')
+            end
+          end
+        end
+      end
+      if not lrkeys then
+        rkeys_download_status = 'proccess'
+        downloadUrlToFile('https://raw.githubusercontent.com/junior196/pdtools/master/lib/rkeys.lua', 'moonloader/lib/rkeys.lua', function(id, status, p1, p2)
+        if status == dlstatus.STATUS_DOWNLOADINGDATA then
+          rkeys_download_status = 'proccess'
+          print(string.format('Загружено %d килобайт из %d килобайт.', p1, p2))
+        elseif status == dlstatus.STATUS_ENDDOWNLOADDATA then
+          rkeys_download_status = 'succ'
+        elseif status == 64 then
+          rkeys_download_status = 'failed'
+        end
+      end)
+      while rkeys_download_status == 'proccess' do wait(0) end
+      if rkeys_download_status == 'failed' then
+        print('Не удалось загрузить rkeys.lua')
+        thisScript():unload()
+      else
+        print('rkeys.lua был загружен')
+      end
+    end
+    ftext('Все необходимые библиотеки были загружены')
+    reloadScripts()
+  else
+  	print('Все необходиме библиотеки были найдены и загружены')
+  end
 end
 
 function goupdate()
