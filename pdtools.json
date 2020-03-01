@@ -1,8 +1,6 @@
 {
   "latest": 0.2,
   "updateurl": "https://github.com/junior196/pdtools/blob/master/pdtools.lua",
-  "updlist": " 
-  - Release
-  - Добавлен список команд
+  "updlist": " - Добавлен список команд
   - Изменено время взятия бп"
 }
