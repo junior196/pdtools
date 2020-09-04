@@ -437,9 +437,11 @@ end
 
 function main()
 	while not isSampAvailable() do wait(0) end
+		libs()
 		ftext("Автор: junior")
 		ftext("Источник: vk.com/junior.soft")
 		ftext("Открыть меню: /pdtools")
+		update()
 		sampRegisterChatCommand('oop', oop) --oop
 		sampRegisterChatCommand('su', su) --розыск
 		sampRegisterChatCommand('ar', ar) --запрос на въезд на тер армии
@@ -476,8 +478,6 @@ function main()
 			 imgui.ShowCursor = main_window_state.v
 		end)
 		imgui.ShowCursor = false
-		libs()
-		update()
 	while true do
 		wait(0)
 		imgui.Process = main_window_state.v or main_window_stats.v or imegaf.v or akwindow.v or ykwindow.v or kshwindow.v or fpwindow.v or fastmenu.v or updatewindow.v
