@@ -94,7 +94,7 @@ hudwindow = false,
 hposx = 100,
 hposy = 650
 }
-}, "pdtools")
+}, "pdtools") 
 
 local color = imgui.ImBool(mainIni.config.color)
 local colorid = imgui.ImInt(mainIni.config.colorid)
