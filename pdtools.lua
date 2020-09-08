@@ -485,6 +485,31 @@ function main()
 			 main_window_state.v = not main_window_state.v
 			 imgui.ShowCursor = main_window_state.v
 		end)
+		if not doesFileExist('moonloader/pdtools/su.txt') then
+			local file = io.open("moonloader/pdtools/su.txt", "w")
+      file:write("B1: Хулиганство - 1 год")
+      file:close()
+		end
+		if not doesFileExist('moonloader/pdtools/ak.txt') then
+			local file = io.open("moonloader/pdtools/ak.txt", "w")
+      file:write("Шпора АК")
+      file:close()
+		end
+		if not doesFileExist('moonloader/pdtools/yk.txt') then
+      local file = io.open("moonloader/pdtools/yk.txt", "w")
+      file:write("Шпора УК")
+      file:close()
+		end
+		if not doesFileExist('moonloader/pdtools/ksh.txt') then
+			local file = io.open("moonloader/pdtools/ksh.txt", "w")
+      file:write("Шпора КШ")
+      file:close()
+		end
+		if not doesFileExist('moonloader/pdtools/fp.txt') then
+			local file = io.open("moonloader/pdtools/fp.txt", "w")
+      file:write("Шпора ФП")
+      file:close()
+		end
 		imgui.ShowCursor = false
 	while true do
 		wait(0)
