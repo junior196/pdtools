@@ -1,6 +1,6 @@
 script_name("PD Tools")
 script_authors("junior")
-script_version("0.5")
+script_version("0.6")
 
 local limgui, imgui = pcall(require, 'imgui')
 local lrkeys, rkeys = pcall(require, 'rkeys')
@@ -69,6 +69,7 @@ meg = false,
 megkey = 'B',
 tazer = false,
 tazerkey = 'Z',
+fastmkey = 'F3',
 takeme = false,
 ticketme = false,
 cejectme = false,
@@ -105,6 +106,7 @@ local meg = imgui.ImBool(mainIni.config.meg)
 local megkey = imgui.ImBuffer(mainIni.config.megkey, 256)
 local tazer = imgui.ImBool(mainIni.config.tazer)
 local tazerkey = imgui.ImBuffer(mainIni.config.tazerkey, 256)
+local fastmkey = imgui.ImBuffer(mainIni.config.fastmkey, 256)
 
 local takeme = imgui.ImBool(mainIni.config.takeme)
 local ticketme = imgui.ImBool(mainIni.config.ticketme)
@@ -184,6 +186,9 @@ function imgui.OnDrawFrame()
 					imgui.SameLine(150)
 					if imgui.InputText(u8'##set5', tazerkey) then mainIni.config.tazerkey = tazerkey.v inicfg.save(mainIni, 'pdtools.ini') end
 				end
+				imgui.Text(u8'Быстрое меню')
+				imgui.SameLine(150)
+				if imgui.InputText(u8'##set6', fastmkey) then mainIni.config.fastmkey = fastmkey.v inicfg.save(mainIni, 'pdtools.ini') end
 				if imgui.Checkbox(u8"Худ", hudwindow) then mainIni.config.hudwindow = hudwindow.v inicfg.save(mainIni, 'pdtools.ini') end
 				if hudwindow.v then
 					imgui.SameLine(150)
@@ -239,8 +244,6 @@ function imgui.OnDrawFrame()
 				imgui.Text(u8'/yk - Уголовный Кодекс')
 				imgui.Text(u8'/fp - Федеральное постановление')
 				imgui.Text(u8'/ksh - Конституция штата')
-				imgui.Separator()
-				imgui.Text(u8'Клавиша \"F2\" - Быстрое меню')
 			end
 			imgui.EndChild()
 		imgui.End()
@@ -539,6 +542,10 @@ function main()
 					sampSendChat('/tazer')
 				end
 			end
+			nkeyy = string.upper(tostring(fastmkey.v))
+			if isKeyJustPressed(_G['VK_'..nkeyy]) and isKeyCheckAvailable() then
+				fastmenu.v = not fastmenu.v
+			end
 			if hudposedit then
 				sampSetCursorMode(1)
 	      curX, curY = getCursorPos()
@@ -552,7 +559,6 @@ function main()
 	        hudposedit = false
 	      end
 			end
-			if wasKeyPressed(114) then fastmenu.v = not fastmenu.v end
 			if coordX ~= nil and coordY ~= nil then
 				cX, cY, cZ = getCharCoordinates(playerPed)
 				cX = math.ceil(cX)
