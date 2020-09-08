@@ -1,6 +1,6 @@
 script_name("PD Tools")
 script_authors("junior")
-script_version("0.6")
+script_version("0.7")
 
 local limgui, imgui = pcall(require, 'imgui')
 local lrkeys, rkeys = pcall(require, 'rkeys')
@@ -186,14 +186,14 @@ function imgui.OnDrawFrame()
 					imgui.SameLine(150)
 					if imgui.InputText(u8'##set5', tazerkey) then mainIni.config.tazerkey = tazerkey.v inicfg.save(mainIni, 'pdtools.ini') end
 				end
-				imgui.Text(u8'Быстрое меню')
-				imgui.SameLine(150)
-				if imgui.InputText(u8'##set6', fastmkey) then mainIni.config.fastmkey = fastmkey.v inicfg.save(mainIni, 'pdtools.ini') end
 				if imgui.Checkbox(u8"Худ", hudwindow) then mainIni.config.hudwindow = hudwindow.v inicfg.save(mainIni, 'pdtools.ini') end
 				if hudwindow.v then
 					imgui.SameLine(150)
 					if imgui.Button(u8'Изменить позицию') then hudposedit = not hudposedit end
 				end
+				imgui.Text(u8'Быстрое меню')
+				imgui.SameLine(150)
+				if imgui.InputText(u8'##set6', fastmkey) then mainIni.config.fastmkey = fastmkey.v inicfg.save(mainIni, 'pdtools.ini') end
 			end
 			if show == 2 then
 				if imgui.Checkbox(u8"take", takeme) then mainIni.config.takeme = takeme.v inicfg.save(mainIni, 'pdtools.ini') end
