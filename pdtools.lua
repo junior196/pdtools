@@ -552,7 +552,7 @@ function main()
 	        hudposedit = false
 	      end
 			end
-			if wasKeyPressed(113) then fastmenu.v = not fastmenu.v end
+			if wasKeyPressed(114) then fastmenu.v = not fastmenu.v end
 			if coordX ~= nil and coordY ~= nil then
 				cX, cY, cZ = getCharCoordinates(playerPed)
 				cX = math.ceil(cX)
