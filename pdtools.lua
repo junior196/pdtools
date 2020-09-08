@@ -182,7 +182,7 @@ function imgui.OnDrawFrame()
 				if imgui.Checkbox(u8"Тазер", tazer) then mainIni.config.tazer = tazer.v inicfg.save(mainIni, 'pdtools.ini') end
 				if tazer.v then
 					imgui.SameLine(150)
-					if imgui.InputText(u8'##set4', tazerkey) then mainIni.config.tazerkey = tazerkey.v inicfg.save(mainIni, 'pdtools.ini') end
+					if imgui.InputText(u8'##set5', tazerkey) then mainIni.config.tazerkey = tazerkey.v inicfg.save(mainIni, 'pdtools.ini') end
 				end
 				if imgui.Checkbox(u8"Худ", hudwindow) then mainIni.config.hudwindow = hudwindow.v inicfg.save(mainIni, 'pdtools.ini') end
 				if hudwindow.v then
@@ -230,6 +230,9 @@ function imgui.OnDrawFrame()
 				if imgui.Checkbox(u8"Спец оружие", specgun) then mainIni.config.specgun = specgun.v inicfg.save(mainIni, 'pdtools.ini') end
 			end
 			if show == 4 then
+				imgui.Text(u8'/ar - Запрос на въед на территорию армии')
+				imgui.Text(u8'/gr - Запрос на въезд в юресдикцию')
+				imgui.Text(u8'/degg - Запрос на выезд из юресдикцию')
 				imgui.Text(u8'/fkv - Поставить метку на квадрат')
 				imgui.Text(u8'/su - Выдать звёзды через диалог')
 				imgui.Text(u8'/ak - Административный Кодекс')
@@ -446,6 +449,7 @@ function main()
 		sampRegisterChatCommand('su', su) --розыск
 		sampRegisterChatCommand('ar', ar) --запрос на въезд на тер армии
 		sampRegisterChatCommand('gr', gr) --запрос на въезд в юресдикцию
+		sampRegisterChatCommand('degg', depgg) --запрос на выезд из юресдикции
 		sampRegisterChatCommand('take', take) --Обыск
 		sampRegisterChatCommand('ticket', ticket) --Выдача штрафа
 		sampRegisterChatCommand('ceject', ceject) --Выкинуть с транспорта
@@ -979,6 +983,24 @@ function ar(pam)
 		ftext("Используйте: /ar [1-2] [причина]", -1)
     ftext("1 - LVa | 2 - SFa", -1)
 	end
+end
+
+function depgg(pam)
+  local dep, reason = pam:match('(%d+) (.+)')
+  if dep == nil or reason == nil then
+  	ftext("Используйте: /depgg [1-2] [Причина]")
+  	ftext("1 - LS | 2 - SF")
+  end
+  if dep ~= nil then
+    if dep == "" or dep < "1" or dep > "2" then
+      ftext("Используйте: /depgg [1-2] [Причина]")
+      ftext("1 - LS | 2 - SF")
+    elseif dep == "1" then
+    	sampSendChat("/dep FBI, пересекаю юрисдикцию Las Venturas в Los Santos, "..reason)
+    elseif dep == "2" then
+    	sampSendChat("/dep FBI, пересекаю юрисдикцию Las Venturas в San Fierro, "..reason)
+    end
+  end
 end
 
 function gr(pam)
