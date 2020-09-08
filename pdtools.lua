@@ -1,6 +1,6 @@
 script_name("PD Tools")
 script_authors("junior")
-script_version("0.4")
+script_version("0.5")
 
 local limgui, imgui = pcall(require, 'imgui')
 local lrkeys, rkeys = pcall(require, 'rkeys')
@@ -53,7 +53,7 @@ local tCarsType = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1
 1, 1, 1, 2, 1, 1, 5, 1, 2, 1, 1, 1, 7, 5, 4, 4, 7, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 1, 5, 5
 }
 
-local hudtazer = "Деактивирован"
+local hudtazer = "{FF0000}Деактивирован"
 local hudposedit = false
 
 local mainIni = inicfg.load({
@@ -387,7 +387,7 @@ function imgui.OnDrawFrame()
 	if fastmenu.v then
 		imgui.ShowCursor = true
 		local btn_size = imgui.ImVec2(-0.1, 0)
-		imgui.SetNextWindowSize(imgui.ImVec2(300, 165), imgui.Cond.FirstUseEver)
+		imgui.SetNextWindowSize(imgui.ImVec2(300, 265), imgui.Cond.FirstUseEver)
 		imgui.Begin(u8(script.this.name..' | Быстрое действие'), fastmenu, imgui.WindowFlags.NoResize  + imgui.WindowFlags.NoCollapse)
 		imgui.Text(u8'Выберите действие:')
 		if imgui.Button(u8 'Представится', btn_size) then
@@ -412,9 +412,13 @@ function imgui.OnDrawFrame()
 			lua_thread.create(function()
 				sampSendChat('Вы арестованы!')
 				wait(1400)
-				sampSendChat('Вы имеете право хранить молчание, всё что вы скажите будет использовано против вас в суде.')
+				sampSendChat('Вы имеете право хранить молчание! Всё, что вы скажите используем против вас в суде.')
 				wait(1400)
-				sampSendChat('У вас есть один звонок адвокату.')
+				sampSendChat('Также у вас есть право на один телефонный звонок, используйте его с умом!')
+				wait(1400)
+				sampSendChat('Если у вас нет денег на адвоката, то мы предоставим вам гос. защитника')
+				wait(1400)
+				sampSendChat('/todo Вам ясны ваши права?!*с ухмылкой посматривая на нарушителя')
 			end)
 			fastmenu.v = false
 			imgui.ShowCursor = false
@@ -487,7 +491,7 @@ function main()
 		imgui.Process = main_window_state.v or main_window_stats.v or imegaf.v or akwindow.v or ykwindow.v or kshwindow.v or fpwindow.v or fastmenu.v or updatewindow.v
 		if hudwindow.v then
 			renderBoxRounded(hposx, hposy, 250, 149, 6, 0xFF000000)
-			renderFontDrawText(fonthud, 'Ник: '..sampGetPlayerNickname(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED))):gsub('_', ' ')..'\nПинг: '..sampGetPlayerPing(sampGetPlayerIdByCharHandle(PLAYER_PED))..'\nЗдоровье: '..getCharHealth(PLAYER_PED)..'\nБроня: '..getCharArmour(PLAYER_PED)..'\n'..naparnik1()..'\nРайон: '..calculateZone(getCharCoordinates(PLAYER_PED))..'\nСектор: '..kvadrat()..'\nTAZER: '..hudtazer, hposx + 4, hposy + 8, 0xFFFFFFFF)
+			renderFontDrawText(fonthud, 'Ник: '..sampGetPlayerNickname(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED))):gsub('_', ' ')..'\nПинг: '..sampGetPlayerPing(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED)))..'\nЗдоровье: '..getCharHealth(PLAYER_PED)..'\nБроня: '..getCharArmour(PLAYER_PED)..'\n'..naparnik1()..'\nРайон: '..calculateZone(getCharCoordinates(PLAYER_PED))..'\nСектор: '..kvadrat()..'\nTAZER: '..hudtazer, hposx + 4, hposy + 8, 0xFFFFFFFF)
 		end
 		if sampIsDialogActive() == false and not isPauseMenuActive() and isPlayerPlaying(playerHandle) and sampIsChatInputActive() == false then
 			if doklad.v then
@@ -799,7 +803,7 @@ function sampGetFraktionBySkin(id)
         if skin == 211 or skin == 217 or skin == 250 or skin == 261 then t = 'News' end
         if skin == 70 or skin == 219 or skin == 274 or skin == 275 or skin == 276 or skin == 70 then t = 'Медики' end
         if skin == 286 or skin == 141 or skin == 163 or skin == 164 or skin == 165 or skin == 166 then t = 'FBI' end
-        if skin == 280 or skin == 265 or skin == 266 or skin == 267 or skin == 281 or skin == 282 or skin == 288 or skin == 284 or skin == 285 or skin == 304 or skin == 305 or skin == 306 or skin == 307 or skin == 309 or skin == 283 or skin == 303 then t = 'Полиция' end
+        if skin == 280 or skin == 265 or skin == 266 or skin == 267 or skin == 281 or skin == 282 or skin == 288 or skin == 284 or skin == 285 or skin == 304 or skin == 305 or skin == 306 or skin == 307 or skin == 309 or skin == 283 or skin == 303 or skin == 309 or skin == 310 or skin == 311 then t = 'Полиция' end
     --end
     return t
 end
@@ -1699,7 +1703,7 @@ function calculateZone(x, y, z)
             return v[1]
         end
     end
-    return "Unknown"
+    return "No Signal"
 end
 
 function kvadrat1(param)
@@ -1768,7 +1772,7 @@ end
 function hook.onServerMessage(color, text)
 	if color == 1790050303 then
 		if text:find('Вы поменяли пули на обычные') then
-			 hudtazer = "Деактивирован"
+			 hudtazer = "{FF0000}Деактивирован"
 			 if tazer.v then
 				 lua_thread.create(function()
 		 		 	wait(600)
@@ -1777,7 +1781,7 @@ function hook.onServerMessage(color, text)
 			end
 		end
 		if text:find('Вы поменяли пули на резиновые') then
-			 hudtazer = "Активирован"
+			 hudtazer = "{00FF2B}Активирован"
 			 if tazer.v then
 				 lua_thread.create(function()
 		 		 	wait(600)
@@ -1800,19 +1804,18 @@ function hook.onShowDialog(id, style, title, button1, button2, text)
 		if armour.v or specgun.v or deagle.v or shot.v or smg.v or M4A1.v or rifle.v then
 			local guns = getCompl()
 			lua_thread.create(function()
-				wait(125)
+				wait(0)
 				if autoBP == #guns + 1 then
 					autoBP = 1
-					sampCloseCurrentDialogWithButton(0)
+					sampSendDialogResponse(id, 0, _, _)
 					return
 				end
-				sampSetCurrentDialogListItem(guns[autoBP])
-				wait(125)
-				sampCloseCurrentDialogWithButton(1)
+				sampSendDialogResponse(id, 1, guns[autoBP], _)
 				if button1 then autoBP = autoBP + 1 end
 				return
 			end)
 		end
+		return false
 	end
 end
 
