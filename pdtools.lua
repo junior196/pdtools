@@ -232,7 +232,7 @@ function imgui.OnDrawFrame()
 			if show == 4 then
 				imgui.Text(u8'/ar - Запрос на въед на территорию армии')
 				imgui.Text(u8'/gr - Запрос на въезд в юресдикцию')
-				imgui.Text(u8'/degg - Запрос на выезд из юресдикцию')
+				imgui.Text(u8'/depgg - Запрос на выезд из юресдикцию')
 				imgui.Text(u8'/fkv - Поставить метку на квадрат')
 				imgui.Text(u8'/su - Выдать звёзды через диалог')
 				imgui.Text(u8'/ak - Административный Кодекс')
@@ -449,7 +449,7 @@ function main()
 		sampRegisterChatCommand('su', su) --розыск
 		sampRegisterChatCommand('ar', ar) --запрос на въезд на тер армии
 		sampRegisterChatCommand('gr', gr) --запрос на въезд в юресдикцию
-		sampRegisterChatCommand('degg', depgg) --запрос на выезд из юресдикции
+		sampRegisterChatCommand('depgg', depgg) --запрос на выезд из юресдикции
 		sampRegisterChatCommand('take', take) --Обыск
 		sampRegisterChatCommand('ticket', ticket) --Выдача штрафа
 		sampRegisterChatCommand('ceject', ceject) --Выкинуть с транспорта
