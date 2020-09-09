@@ -1,6 +1,6 @@
 script_name("PD Tools")
 script_authors("junior")
-script_version("0.7")
+script_version("0.8")
 
 local limgui, imgui = pcall(require, 'imgui')
 local lrkeys, rkeys = pcall(require, 'rkeys')
@@ -94,7 +94,7 @@ hudwindow = false,
 hposx = 100,
 hposy = 650
 }
-}, "pdtools") 
+}, "pdtools")
 
 local color = imgui.ImBool(mainIni.config.color)
 local colorid = imgui.ImInt(mainIni.config.colorid)
@@ -656,7 +656,7 @@ function megaf()
             local dist = getDistanceBetweenCoords3d(myposx, myposy, myposz, pposx, pposy, pposz)
             if dist <=65 then
               if getDriverOfCar(car) == ped then
-                if sampGetFraktionBySkin(v) ~= 'Полиция' then
+                if sampGetFraktionBySkin(v) ~= 'Полиция' or sampGetFraktionBySkin(v) ~= 'FBI' then
                   if storeCarCharIsInNoSave(ped) ~= storeCarCharIsInNoSave(PLAYER_PED) then
                     if v ~= myvodil then
                       	table.insert(incar, v)
@@ -720,7 +720,7 @@ function naparnik1()
           if isCharInAnyCar(ichar) then
             local iveh = storeCarCharIsInNoSave(ichar)
             if veh == iveh then
-              if sampGetFraktionBySkin(i) == 'Полиция' then
+              if sampGetFraktionBySkin(i) == 'Полиция' or sampGetFraktionBySkin(i) == 'FBI' then
                 local inick, ifam = sampGetPlayerNickname(i):match('(.+)_(.+)')
                 if inick and ifam then
                 	table.insert(v, string.format('%s.%s', inick:sub(1,1), ifam))
@@ -739,7 +739,7 @@ function naparnik1()
         if doesCharExist(ichar) then
           local ix, iy, iz = getCharCoordinates(ichar)
           if getDistanceBetweenCoords3d(myposx, myposy, myposz, ix, iy, iz) <= 30 then
-            if sampGetFraktionBySkin(i) == 'Полиция' then
+            if sampGetFraktionBySkin(i) == 'Полиция' or sampGetFraktionBySkin(i) == 'FBI' then
               local inick, ifam = sampGetPlayerNickname(i):match('(.+)_(.+)')
               if inick and ifam then
               	table.insert(v, string.format('%s.%s', inick:sub(1,1), ifam))
@@ -770,7 +770,7 @@ function naparnik()
           if isCharInAnyCar(ichar) then
             local iveh = storeCarCharIsInNoSave(ichar)
             if veh == iveh then
-              if sampGetFraktionBySkin(i) == 'Полиция' then
+              if sampGetFraktionBySkin(i) == 'Полиция' or sampGetFraktionBySkin(i) == 'FBI' then
                 local inick, ifam = sampGetPlayerNickname(i):match('(.+)_(.+)')
                 if inick and ifam then
                 	table.insert(v, string.format('%s.%s', inick:sub(1,1), ifam))
@@ -789,7 +789,7 @@ function naparnik()
         if doesCharExist(ichar) then
           local ix, iy, iz = getCharCoordinates(ichar)
           if getDistanceBetweenCoords3d(myposx, myposy, myposz, ix, iy, iz) <= 30 then
-            if sampGetFraktionBySkin(i) == 'Полиция' then
+            if sampGetFraktionBySkin(i) == 'Полиция' or sampGetFraktionBySkin(i) == 'FBI' then
               local inick, ifam = sampGetPlayerNickname(i):match('(.+)_(.+)')
               if inick and ifam then
               	table.insert(v, string.format('%s.%s', inick:sub(1,1), ifam))
