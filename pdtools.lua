@@ -54,6 +54,7 @@ local tCarsType = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1
 }
 
 local hudtazer = "{FF0000}Äåàêòèâèğîâàí"
+local targetid = -1
 local hudposedit = false
 
 local mainIni = inicfg.load({
@@ -517,9 +518,25 @@ function main()
 	while true do
 		wait(0)
 		imgui.Process = main_window_state.v or main_window_stats.v or imegaf.v or akwindow.v or ykwindow.v or kshwindow.v or fpwindow.v or fastmenu.v or updatewindow.v
+		if targetid > -1 then
+			ox, oy, oz = getCharCoordinates(PLAYER_PED)
+			result, peddd = sampGetCharHandleBySampPlayerId(targetid)
+			if result then
+				px, py, pz = getCharCoordinates(peddd)
+				dis = getDistance(ox, oy, oz, px, py, pz)
+				if dis > 50 then
+					targetid = -1
+				end
+			end
+		end
+		local result, target = getCharPlayerIsTargeting(playerHandle)
+		if result then
+			result, playerid = sampGetPlayerIdByCharHandle(target)
+			if result then targetid = playerid end
+		end
 		if hudwindow.v then
-			renderBoxRounded(hposx, hposy, 250, 149, 6, 0xFF000000)
-			renderFontDrawText(fonthud, 'Íèê: '..sampGetPlayerNickname(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED))):gsub('_', ' ')..'\nÏèíã: '..sampGetPlayerPing(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED)))..'\nÇäîğîâüå: '..getCharHealth(PLAYER_PED)..'\nÁğîíÿ: '..getCharArmour(PLAYER_PED)..'\n'..naparnik1()..'\nĞàéîí: '..calculateZone(getCharCoordinates(PLAYER_PED))..'\nÑåêòîğ: '..kvadrat()..'\nTAZER: '..hudtazer, hposx + 4, hposy + 8, 0xFFFFFFFF)
+			renderBoxRounded(hposx, hposy, 250, 163, 6, 0xFF000000)
+			renderFontDrawText(fonthud, 'Íèê: '..sampGetPlayerNickname(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED))):gsub('_', ' ')..'\nÏèíã: '..sampGetPlayerPing(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED)))..'\nÇäîğîâüå: '..getCharHealth(PLAYER_PED)..'\nÁğîíÿ: '..getCharArmour(PLAYER_PED)..'\n'..naparnik1()..'\nÖåëü: '..cell()..'\nĞàéîí: '..calculateZone(getCharCoordinates(PLAYER_PED))..'\nÑåêòîğ: '..kvadrat()..'\nTAZER: '..hudtazer, hposx + 4, hposy + 8, 0xFFFFFFFF)
 		end
 		if sampIsDialogActive() == false and not isPauseMenuActive() and isPlayerPlaying(playerHandle) and sampIsChatInputActive() == false then
 			if isKeyJustPressed(04) and isKeyCheckAvailable() then sampSendChat('/tazer')	end
@@ -588,6 +605,11 @@ function main()
 			end
 		end
 	end
+end
+
+function getDistance(x1, y1, z1, x2, y2, z2)
+	local distance = math.sqrt( ((x1-x2)^2) + ((y1-y2)^2) + ((z1-z2)^2))
+	return distance
 end
 
 function isKeyCheckAvailable()
@@ -758,6 +780,14 @@ function naparnik1()
   elseif #v >=2 then
   	return 'Íàïàğíèêè: '..table.concat(v, ', ').. '.'
   end
+end
+
+function cell()
+	if targetid > 0 and targetid < 1001 then
+		return ''..sampGetPlayerNickname(targetid)..' ('..targetid..')'
+	else
+		return 'Íåò'
+	end
 end
 
 function naparnik()
@@ -1735,7 +1765,7 @@ function calculateZone(x, y, z)
             return v[1]
         end
     end
-    return "No Signal"
+    return "No signal"
 end
 
 function kvadrat1(param)
