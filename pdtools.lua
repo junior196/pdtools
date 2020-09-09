@@ -1,6 +1,6 @@
 script_name("PD Tools")
 script_authors("junior")
-script_version("0.8")
+script_version("0.9")
 
 local limgui, imgui = pcall(require, 'imgui')
 local lrkeys, rkeys = pcall(require, 'rkeys')
@@ -522,6 +522,7 @@ function main()
 			renderFontDrawText(fonthud, 'Ник: '..sampGetPlayerNickname(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED))):gsub('_', ' ')..'\nПинг: '..sampGetPlayerPing(select(2, sampGetPlayerIdByCharHandle(PLAYER_PED)))..'\nЗдоровье: '..getCharHealth(PLAYER_PED)..'\nБроня: '..getCharArmour(PLAYER_PED)..'\n'..naparnik1()..'\nРайон: '..calculateZone(getCharCoordinates(PLAYER_PED))..'\nСектор: '..kvadrat()..'\nTAZER: '..hudtazer, hposx + 4, hposy + 8, 0xFFFFFFFF)
 		end
 		if sampIsDialogActive() == false and not isPauseMenuActive() and isPlayerPlaying(playerHandle) and sampIsChatInputActive() == false then
+			if isKeyJustPressed(04) and isKeyCheckAvailable() then sampSendChat('/tazer')	end
 			if doklad.v then
 				nkeyy = string.upper(tostring(dokladkey.v))
 				if isKeyJustPressed(_G['VK_'..nkeyy]) and isKeyCheckAvailable() then
